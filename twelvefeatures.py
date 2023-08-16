@@ -1,24 +1,21 @@
 import cv2
 from HandTrackingModule import HandDetector
 import math
+import numpy as np
+# import prerocessing as NBMODEL
 Detector= HandDetector()
-# Alphabet=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
-# capture= cv2.VideoCapture(0)
-# capture.set(3, 1080)
-# capture.set(4, 720)
-capture = cv2.VideoCapture(0)
+import joblib
 
-# Create a named window
-cv2.namedWindow("Webcam", cv2.WINDOW_NORMAL)  # Use WINDOW_NORMAL for resizable window
-
-# Set the initial window size
-cv2.resizeWindow("Webcam", 800, 600)  # Adjust the size as needed
+capture= cv2.VideoCapture(0, cv2.CAP_DSHOW)
+capture.set(3, 1080)
+capture.set(4, 720)
 offset = 20
 imgSize = 300
-file = open('Sani.csv', 'a')
-count=1
-loop=0
+file = open('demoDatasetCollect.csv', 'a')
 
+feature11=0
+feature12=0
+save=0
 while True:
     isFrame, Frame= capture.read()
 
@@ -83,11 +80,57 @@ while True:
                 ratio_8_12=round(length8to12/length4to20,3)
 
 
+                if Detector.fingersUp(hand1)==[0,1,0,0,0] or Detector.fingersUp(hand1)==[0,1,1,0,0] or Detector.fingersUp(hand1)==[0,1,0,0,1] or Detector.fingersUp(hand1)==[0,1,1,0,1]:
+                    x9 = lmList[8][0]
+                    y9 = lmList[8][1]
+                    angle1= np.arctan(y9/x9)
+                    if angle1 >=0.80:
+                        feature11=1
+                        # print("Feature 1-10",feture11,feture12)
+                    else:
+                        feature11=0
+                        # print("Feature 1-10",feture11,feture12)
+                elif Detector.fingersUp(hand1)==[0,0,0,0,1]:
+                    x10 = lmList[20][0]
+                    y10 = lmList[20][1]
+                    angle2= np.arctan(y10/x10)
+                    if angle2 >=0.80:
+                        feature12=1
+                        # print("Feature 1-10",feature11,feature11)
+                    else:
+                        feature12=0
+                        # print("Feature 1-10",feature11,feature11)
+                else:
+                    feature11=0
+                    feature12=0
+                    # print("Feature 1-10")
+
+                    # print("Feature 12")
 
                 # ratio=[ratio_BT,ratio_BI,ratio_BR,ratio_BL]
                 ratio=str(ratio_BT)+','+ str(ratio_BI)+','+str(ratio_BR)+','+str(ratio_BL)+','+str(ratio_BLT)
                 ratio1=str(ratio_8_20)+','+str(ratio_12_20)+','+str(ratio_16_20)+','+str(ratio_16_12)+','+str(ratio_8_12)
+                ratio3= str(feature11)+','+str(feature12)
+                # print("Feature 1-5: ",ratio)
+                # print("Feature 6-10: ",ratio1)
+                # print("Feature 11,12: ",ratio3)/
                 
+                total=(ratio+","+ratio1+","+ratio3)
+                if count==101:
+                    file.write("\n")
+                    cv2.putText(Frame, "Thank You!!",(400,100),fontFace=cv2.FONT_HERSHEY_PLAIN, fontScale=7, color=(255,0,255), thickness=5)
+                    save=0
+                    count=0
+                else: 
+                    if save==1:
+                        print(count)
+                        # angle= str(done1)+ str(done2)
+                        file.write(total)
+                        file.write("\n")
+                        count+=1
+                # totalinarray=np.fromstring(total, dtype=int, sep=',')
+                
+                # print(result)
                 # print(count,ratio1)
 
                 # if  0xFF==ord("s"):
@@ -112,20 +155,9 @@ while True:
         cv2.imshow("Capture",Frame)
 
         key=cv2.waitKey(1)
-        if key==ord("s"):
-            print(count,ratio1)
-            count+=1
-            total= ratio+ ","+ ratio1
-            # total= round(ratio,3)+ ","+ round(ratio1,3)
-            file.write(total)
-            file.write("\n")
-            # with open("text.txt", 'w') as f:
-            #     for s in ratio:
-            #         f.write(str(s) + '\n')
-            # cv2.imwrite(f"{folder}/Image_"{time.time()}.png", imgWhite)
-            # cv2.imwrite(f"{folder}/Image_{time.time()}.png",imgWhite)
-            # print(counter)
-        elif key==ord("q"):
+        if key==ord("q"):
             break
+        elif key== ord("s"):
+            save=1
     else:
         break

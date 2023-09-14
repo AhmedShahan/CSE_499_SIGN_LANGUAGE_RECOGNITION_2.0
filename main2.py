@@ -11,9 +11,9 @@ count=1
 loop=0
 save1 =0
 save2 =0
-# Initially the features 11 & 12 are set as 0
-feature11=0 
-feature12=0
+# # Initially the features 11 & 12 are set as 0
+# feature11=0 
+# feature12=0
 
 # File where all the datapoints are stored
 file = open('Dataset/shahan.csv','a')
@@ -100,44 +100,44 @@ while True:
             # print(lengthIndex)
             ratio_8_12=round(length8to12/length4to20,3)
 
-            if Detector.fingersUp(hand1)==[0,1,0,0,0] or Detector.fingersUp(hand1)==[0,1,1,0,0] or Detector.fingersUp(hand1)==[0,1,0,0,1] or Detector.fingersUp(hand1)==[0,1,1,0,1]:
-                x9 = lmList[8][0]
-                y9 = lmList[8][1]
-                angle1= np.arctan(y9/x9)
-                if angle1 >=0.80:
-                    feature11=1
-                    # print("Feature 1-10",feture11,feture12)
-                else:
-                    feature11=0
-                    # print("Feature 1-10",feture11,feture12)
-            elif Detector.fingersUp(hand1)==[0,0,0,0,1]:
-                x10 = lmList[20][0]
-                y10 = lmList[20][1]
-                angle2= np.arctan(y10/x10)
-                if angle2 >=0.80:
-                    feature12=1
-                    # print("Feature 1-10",feature11,feature11)
-                else:
-                    feature12=0
-                    # print("Feature 1-10",feature11,feature11)
-            else:
-                feature11=0
-                feature12=0
-                # print("Feature 1-10")
+            # if Detector.fingersUp(hand1)==[0,1,0,0,0] or Detector.fingersUp(hand1)==[0,1,1,0,0] or Detector.fingersUp(hand1)==[0,1,0,0,1] or Detector.fingersUp(hand1)==[0,1,1,0,1]:
+            #     x9 = lmList[8][0]
+            #     y9 = lmList[8][1]
+            #     angle1= np.arctan(y9/x9)
+            #     if angle1 >=0.80:
+            #         feature11=1
+            #         # print("Feature 1-10",feture11,feture12)
+            #     else:
+            #         feature11=0
+            #         # print("Feature 1-10",feture11,feture12)
+            # elif Detector.fingersUp(hand1)==[0,0,0,0,1]:
+            #     x10 = lmList[20][0]
+            #     y10 = lmList[20][1]
+            #     angle2= np.arctan(y10/x10)
+            #     if angle2 >=0.80:
+            #         feature12=1
+            #         # print("Feature 1-10",feature11,feature11)
+            #     else:
+            #         feature12=0
+            #         # print("Feature 1-10",feature11,feature11)
+            # else:
+            #     feature11=0
+            #     feature12=0
+            #     # print("Feature 1-10")
 
-                # print("Feature 12")
+            #     # print("Feature 12")
 
             # ratio=[ratio_BT,ratio_BI,ratio_BR,ratio_BL]
             ratio=str(ratio_BT)+','+ str(ratio_BI)+','+str(ratio_BR)+','+str(ratio_BL)+','+str(ratio_BLT)
             ratio1=str(ratio_8_20)+','+str(ratio_12_20)+','+str(ratio_16_20)+','+str(ratio_16_12)+','+str(ratio_8_12)
-            ratio3= str(feature11)+','+str(feature12)
+            # ratio3= str(feature11)+','+str(feature12)
             # print("Feature 1-5: ",ratio)
             # print("Feature 6-10: ",ratio1)
             # print("Feature 11,12: ",ratio3)/
             
-            total=(ratio+","+ratio1+","+ratio3)
-            
-            if count==101:
+            # total=(ratio+","+ratio1+","+ratio3)
+            total=(ratio+","+ratio1)
+            if count==20:
                 file.write("\n")
                 # cv2.putText(frame, "Thank You!!",(400,100),fontFace=cv2.FONT_HERSHEY_PLAIN, fontScale=7, color=(255,0,255), thickness=5)
                 # time.sleep()
@@ -146,6 +146,7 @@ while True:
             else: 
                 if save1==1:
                     print(count)
+                    time.sleep(2)
                     cv2.putText(frame, f"Data Stored Number:{str(count)}",(20,100),fontFace=cv2.FONT_HERSHEY_PLAIN, fontScale=3, color=(255,0,255), thickness=5)
                     
                     # angle= str(done1)+ str(done2)

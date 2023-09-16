@@ -12,7 +12,7 @@ loop=0
 save1 =0
 save2 =0
 # alphabetCount=0
-file = open('Dataset/.csv','a')
+file = open('Dataset/shahan.csv','a')
 
 
 # Open the webcam

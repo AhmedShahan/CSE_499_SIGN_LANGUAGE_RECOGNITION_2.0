@@ -5,6 +5,8 @@ from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import accuracy_score,confusion_matrix, precision_recall_fscore_support, classification_report
 from mlxtend.plotting import plot_confusion_matrix
 import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
 import os 
 import time
 ## Result section saved files
@@ -19,30 +21,34 @@ f1File= open("Result/f1.txt","w")
 
 Directory= "/media/shahan/New Volume/CSE_499_SIGN_LANGUAGE_RECOGNITION_2.0/Dataset"
 Catagory= os.listdir(Directory)
-
-totalDataset=len(Catagory)
-path= os.path.join(Directory,Catagory[0])
-dataset= pd.read_csv(path)
-
-# print(dataset)
-
-
-'''
-# for i in range(0,15):
-path= os.path.join(Directory,Catagory[])
+total_Dataset=len(Catagory)
+# for i in range(0,total_Dataset):
+path= os.path.join(Directory,Catagory[total_Dataset-1])
 dataset= pd.read_csv(path)
 
 
 # shuffle the dataset
 dataset=dataset.sample(frac=True)
-
 ## split the data into featurs and target
 X= dataset.iloc[:,:-1].values
 # print(X)
 
 Y= dataset.iloc[:,-1:].values.ravel()
 # print(Y)
-
+# pd.DataFrame.hist(Y)
+# pd.DataFrame.plot(kind='hist')
+# # pd.DataFrame.plot.hist()
+# plt.show()
+dataset.plot(kind='hist',
+        alpha=0.7,
+        bins=30,
+        title='Histogram Of Test Scores',
+        rot=45,
+        grid=True,
+        figsize=(12,8),
+        fontsize=15)
+plt.show()
+'''
 ## split traing & testing
 x_train, x_test, y_train, y_test=train_test_split(X,Y,random_state=10,test_size=0.2)
 
@@ -84,7 +90,7 @@ p_fit=time.time()
 
 ################################# Accuracy   ########################################
 accuracy= accuracy_score(y_test,prediction)
-print("Accuracy = ",accuracy)
+# print("Accuracy = ",accuracy)
 # accuracyFile.write(str(accuracy)+",")
 
 

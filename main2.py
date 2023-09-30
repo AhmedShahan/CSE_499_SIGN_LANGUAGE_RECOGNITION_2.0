@@ -12,7 +12,7 @@ loop=0
 save1 =0
 save2 =0
 # alphabetCount=0
-file = open('Dataset/shahan.csv','a')
+file = open('Dataset/alian.csv','a')
 
 
 # Open the webcam
@@ -145,7 +145,7 @@ while True:
             # total=(ratio+","+ratio1+","+ratio3)
                 total=leftFeatures+','+rightFeatures+','+str(round(length2Hand,3))
             
-            if count==21:
+            if count==51:
                 file.write("\n")
                 # cv2.putText(frame, "Thank You!!",(400,100),fontFace=cv2.FONT_HERSHEY_PLAIN, fontScale=7, color=(255,0,255), thickness=5)
                 # time.sleep()

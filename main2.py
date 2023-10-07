@@ -5,14 +5,14 @@ import time
 from HandTrackingModule import HandDetector
 Detector= HandDetector(maxHands=2)
 
-# Alphabet=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+
 # Default values for 
 count=1
 loop=0
 save1 =0
 save2 =0
 # alphabetCount=0
-file = open('Dataset/alian.csv','a')
+file = open('Dataset_BSL_Bangla/kabbo.csv','a')
 
 
 # Open the webcam

@@ -19,35 +19,35 @@ recallFile= open("Result/recall.txt","w")
 f1File= open("Result/f1.txt","w")
 
 
-Directory= "/media/shahan/New Volume/CSE_499_SIGN_LANGUAGE_RECOGNITION_2.0/Dataset"
+Directory= "/media/shahan/New Volume/CSE_499_SIGN_LANGUAGE_RECOGNITION_2.0/Dataset_BSL_Bangla"
 Catagory= os.listdir(Directory)
 total_Dataset=len(Catagory)
-# for i in range(0,total_Dataset):
-path= os.path.join(Directory,Catagory[total_Dataset-1])
-dataset= pd.read_csv(path)
+for i in range(0,total_Dataset):
+        path= os.path.join(Directory,Catagory[i])
+        dataset= pd.read_csv(path)
 
 
-# shuffle the dataset
-dataset=dataset.sample(frac=True)
-## split the data into featurs and target
-X= dataset.iloc[:,:-1].values
-# print(X)
+        # shuffle the dataset
+        dataset=dataset.sample(frac=True)
+        ## split the data into featurs and target
+        X= dataset.iloc[:,:-1].values
+        # print(X)
 
-Y= dataset.iloc[:,-1:].values.ravel()
-# print(Y)
-# pd.DataFrame.hist(Y)
-# pd.DataFrame.plot(kind='hist')
-# # pd.DataFrame.plot.hist()
-# plt.show()
-dataset.plot(kind='hist',
-        alpha=0.7,
-        bins=30,
-        title='Histogram Of Test Scores',
-        rot=45,
-        grid=True,
-        figsize=(12,8),
-        fontsize=15)
-plt.show()
+        Y= dataset.iloc[:,-1:].values.ravel()
+        # print(Y)
+        # pd.DataFrame.hist(Y)
+        # pd.DataFrame.plot(kind='hist')
+        # # pd.DataFrame.plot.hist()
+        # plt.show()
+        dataset.plot(kind='hist',
+                alpha=0.7,
+                bins=30,
+                title='Histogram Of Test Scores',
+                rot=45,
+                grid=True,
+                figsize=(12,8),
+                fontsize=15)
+        plt.show()
 '''
 ## split traing & testing
 x_train, x_test, y_train, y_test=train_test_split(X,Y,random_state=10,test_size=0.2)

@@ -1,6 +1,6 @@
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder
-from sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import GaussianNB, BernoulliNB
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import accuracy_score,confusion_matrix, precision_recall_fscore_support, classification_report
 from mlxtend.plotting import plot_confusion_matrix
@@ -75,7 +75,7 @@ for i in range(0,total_Dataset+1):
 
         # Gausian Naive base instance
         e_Parameter=time.time()
-        GausianNb= GaussianNB()
+        GausianNb= BernoulliNB(binarize=0.0)
 
         # fit the model
         model_GaussianNB= GausianNb.fit(x_train,y_train)

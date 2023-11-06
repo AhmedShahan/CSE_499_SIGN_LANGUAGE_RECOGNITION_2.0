@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 from sklearn.naive_bayes import GaussianNB
+from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn import metrics
 from sklearn.metrics import accuracy_score,confusion_matrix, precision_recall_fscore_support, classification_report
@@ -9,6 +10,7 @@ import time
 import matplotlib.pyplot as plt
 from mlxtend.plotting import plot_confusion_matrix
 import seaborn as sns
+import numpy as np
 ## Result section saved files
 # print('Default Parameters: ',GaussianNB().get_params())
 accuracyFile= open("Result/accuracy.txt","w")
@@ -49,10 +51,47 @@ Y= dataset.iloc[:,-1:].values.ravel()
 #         fontsize=15)
 # plt.show()
 
-## split traing & testing
+# ## split traing & testing
 x_train, x_test, y_train, y_test=train_test_split(X,Y,random_state=10,test_size=0.2)
 
 
+# ########### Hyperperemeter ################
+# import numpy as np
+# from sklearn.model_selection import RepeatedStratifiedKFold
+
+
+# np.logspace(0,-9, num=10)
+
+# NVG=GaussianNB()
+# cv_method = RepeatedStratifiedKFold(n_splits=5, 
+#                                     n_repeats=3, 
+#                                     random_state=999)
+
+# from sklearn.preprocessing import PowerTransformer
+# params_NB = {'var_smoothing': np.logspace(0,-9, num=100)}
+
+# gs_NB = GridSearchCV(estimator=NVG, 
+#                      param_grid=params_NB, 
+#                      cv=cv_method,
+#                      verbose=1, 
+#                      scoring='accuracy')
+
+# Data_transformed = PowerTransformer().fit_transform(x_test)
+
+# gs_NB.fit(Data_transformed, y_test)
+
+# print("Best Parameters: ",gs_NB.best_params_)
+# print("Best Score ",gs_NB.best_score_)
+
+
+# results_NB = pd.DataFrame(gs_NB.cv_results_['params'])
+# results_NB['test_score'] = gs_NB.cv_results_['mean_test_score']
+
+# plt.plot(results_NB['var_smoothing'], results_NB['test_score'], marker = '.')    
+# plt.xlabel('Var. Smoothing')
+# plt.ylabel("Mean CV Score")
+# plt.title("NB Performance Comparison")
+# plt.show()
 
 ############ Number of each Alphabet after spleating ###########
 # count_class= pd.value_counts(y_test, sort=True)
@@ -71,7 +110,7 @@ x_train, x_test, y_train, y_test=train_test_split(X,Y,random_state=10,test_size=
 
 
 
-#### Model training
+### Model training
 
 # Gausian Naive base instance
 e_Parameter=time.time()
@@ -87,7 +126,7 @@ predictionOnTrain= model_GaussianNB.predict(x_train)
 
 p_fit=time.time()
 
-## Evaluating based on prediction & ytest
+# Evaluating based on prediction & ytest
 # print("Prediction = ",prediction)
 # print("Y Test     = ",y_test)
 
@@ -148,49 +187,6 @@ print("Testing Accuracy = ",accuracyOnTest)
 # plt.ylabel('Accuracy')
 # plt.legend()
 # plt.show()
-
-
-########## LOSS #############
-import torch
-import torch.nn as nn
-import torch.optim as optim
-from sklearn.model_selection import train_test_split
-
-# Define your model
-# model = model_GaussianNB()
-
-# Split the data into training and testing sets
-x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2)
-
-# Define the loss function
-criterion = nn.CrossEntropyLoss()  # Replace with the appropriate loss function
-
-# Define the optimizer
-optimizer = optim.SGD(model_GaussianNB.parameters(), lr=0.1)  # Replace with the appropriate optimizer
-
-# Lists to store training and testing loss values
-train_loss = []
-test_loss = []
-
-# Training loop (for example, over epochs)
-num_epochs=100
-for epoch in range(num_epochs):
-    model_GaussianNB.train()  # Set the model in training mode
-    for inputs, labels in x_test:  # Iterate over batches of training data
-        optimizer.zero_grad()
-        outputs = model_GaussianNB(inputs)
-        loss = criterion(outputs, labels)
-        loss.backward()
-        optimizer.step()
-        train_loss.append(loss.item())
-    
-    model_GaussianNB.eval()  # Set the model in evaluation mode
-    with torch.no_grad():
-        for inputs, labels in x_test:  # Iterate over batches of testing data
-            outputs = model_GaussianNB(inputs)
-            loss = criterion(outputs, labels)
-            test_loss.append(loss.item())
-
 
 
 # # ################################# 10 Fold Cross   ########################################

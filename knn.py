@@ -25,126 +25,115 @@ tuningParameter= open("Result/tuning.txt","w")
 Directory= "/media/shahan/New Volume/CSE_499_SIGN_LANGUAGE_RECOGNITION_2.0/Dataset_BSL_Bangla"
 Catagory= os.listdir(Directory)
 total_Dataset=len(Catagory)
-for i in range(0,total_Dataset):
-    # path= os.path.join(Directory,Catagory[total_Dataset-1])
-    path= os.path.join(Directory,Catagory[i])
-    dataset= pd.read_csv(path)
+
+# for i in range(0,total_Dataset):
+path= os.path.join(Directory,Catagory[total_Dataset-1])
+# path= os.path.join(Directory,Catagory[i])
+dataset= pd.read_csv(path)
 
 
-    # shuffle the dataset
-    dataset=dataset.sample(frac=True)
-    ## split the data into featurs and target
-    X= dataset.iloc[:,:-1].values
-    # print(X)
+# shuffle the dataset
+dataset=dataset.sample(frac=True)
+## split the data into featurs and target
+X= dataset.iloc[:,:-1].values
+# print(X)
 
-    Y= dataset.iloc[:,-1:].values.ravel()
-
-
-    ## split traing & testing
-    x_train, x_test, y_train, y_test=train_test_split(X,Y,random_state=10,test_size=0.2)
+Y= dataset.iloc[:,-1:].values.ravel()
 
 
-
-    ############ Number of each Alphabet after spleating ###########
-    # count_class= pd.value_counts(y_test, sort=True)
-    # print(count_class)
-    # # col=["Red","Green","Blue","Orange","Magenta","Yellow","Black","Purple","Orange","LightGreen","Gray","LightBlue","LightRed","LightGreen","DarkBlue","DarkRed","DarkGreen", "DarkBlue","DarkRed","DarkGreen","DarkBlue","DarkRed","DarkGreen""DarkBlue","DarkRed","DarkGreen"]
-    # col=["b","c","g","m","k","lightpink","r","y","forestgreen","slategrey","bisque","royalblue","lime","darkorange","indigo","cyan","violet","olive","dodgerblue","crimson","gold","maroon","navy","tan","teal","tomato"]
-    # count_class.plot(kind="bar",color=col)
-    # # plt.title("Bar Chart")
-    # plt.show()
-
-    # dataset.plot(kind="kde",color=col)
-    # plt.show()
-
-
-    ## Parameter
-    n_neighbour=np.arange(3,100,2)
-    grid_params = { 'n_neighbors' :n_neighbour,
-                'weights' : ['uniform','distance'],
-                'metric' : ['minkowski','euclidean','manhattan'],
-                'algorithm' : ['auto','ball_tree','kd_tree','brute'],
-                }
-
-    gs = GridSearchCV(KNeighborsClassifier(), grid_params, verbose = 1, cv=10, n_jobs = -1)
-    g_res = gs.fit(x_train, y_train)
-    print("Optimized Best Score = ", g_res.best_score_)
-    print("Optimized Best Parameters = ", g_res.best_params_)
-    t_parameter=str(g_res.best_score_) + "," + str(g_res.best_params_)
-    tuningParameter.write(str(t_parameter)+",")
-    tuningParameter.write("------")
+## split traing & testing
+x_train, x_test, y_train, y_test=train_test_split(X,Y,random_state=10,test_size=0.2)
 
 
 
-    #### Model training
+############ Number of each Alphabet after spleating ###########
+# count_class= pd.value_counts(y_test, sort=True)
+# print(count_class)
+# # col=["Red","Green","Blue","Orange","Magenta","Yellow","Black","Purple","Orange","LightGreen","Gray","LightBlue","LightRed","LightGreen","DarkBlue","DarkRed","DarkGreen", "DarkBlue","DarkRed","DarkGreen","DarkBlue","DarkRed","DarkGreen""DarkBlue","DarkRed","DarkGreen"]
+# col=["b","c","g","m","k","lightpink","r","y","forestgreen","slategrey","bisque","royalblue","lime","darkorange","indigo","cyan","violet","olive","dodgerblue","crimson","gold","maroon","navy","tan","teal","tomato"]
+# count_class.plot(kind="bar",color=col)
+# # plt.title("Bar Chart")
+# plt.show()
 
-    # Gausian Naive base instance
-    e_Parameter=time.time()
-    call_knn= KNeighborsClassifier(n_neighbors=g_res.best_params_['n_neighbors'],weights=g_res.best_params_['weights'], metric=g_res.best_params_['metric'],algorithm=g_res.best_params_['algorithm'])
-
-    # fit the model
-    model_knn= call_knn.fit(x_train,y_train)
-    e_fit=time.time()
-    # predict from the model
-    prediction= model_knn.predict(x_test)
-    p_fit=time.time()
-
-    ## Evaluating based on prediction & ytest
-    # print("Prediction = ",prediction)
-    # print("Y Test     = ",y_test)
-
-    ################################# Accuracy   ########################################
-    accuracy= accuracy_score(y_test,prediction)
-    print("Accuracy = ",accuracy)
-    accuracyFile.write(str(accuracy)+",")
+# dataset.plot(kind="kde",color=col)
+# plt.show()
 
 
-    # # ################################# Cross Validation   ########################################
-    # for i in range (4,13):
-    #     cross_val=cross_val_score(model_GaussianNB, X, Y,cv=i)
-    #     # print(cross_val)
-    #     sum_cross_val= cross_val.sum()
-    #     cv=sum_cross_val/i
-    #     # print(cv)
-    #     Cross_valFile.write(str(cv)+",")
-    #     # print(cross_val)
-    # # Cross_valFile.write("\n")
+## Parameter
+s_Parameter=time.time()
+n_neighbour=np.arange(3,100,2)
+grid_params = { 'n_neighbors' :n_neighbour,
+            'weights' : ['uniform','distance'],
+            'metric' : ['minkowski','euclidean','manhattan'],
+            'algorithm' : ['auto','ball_tree','kd_tree','brute'],
+            }
 
-
-    # # ################################# 10 Fold Cross   ########################################
-    cross_val=cross_val_score(model_knn, X, Y,cv=10)
-    # print(cross_val)
-    sum_cross_val= cross_val.sum()
-    cv=sum_cross_val/10
-    print("Cross Validation= ",cv)
-    Cross_valFile_10_Fold.write(str(cv)+",")
-
-
-    # # ########################## Confussion Matrix ############################# 
-    # cm_result=confusion_matrix(y_test,prediction)
-
-    # print(cm_result)
-    # fig, ax = plot_confusion_matrix(conf_mat=cm_result,cmap=plt.cm.Greens,class_names=model_knn.classes_)
-    # # fig, ax = plot_confusion_matrix(conf_mat=cm_result,cmap=plt.cm.Greens)
-    # plt.xlabel('Predictions', fontsize=18)
-    # plt.ylabel('Actuals', fontsize=18)
-    # plt.title('Confusion Matrix', fontsize=18)
-    # # plt.savefig("cm.png")
-    # plt.show()
-
-
-    # # ############ Presition, Recall, F1 ####################
-    precision,recall,f1,support=precision_recall_fscore_support(y_test,prediction, average="weighted")
-    print("Prec Recall F1 Supppor= ",precision_recall_fscore_support(y_test,prediction, average="weighted"))
-    precisionFile.write(str(precision)+",")
-    recallFile.write(str(recall)+",")
-    f1File.write(str(f1)+",")
+gs = GridSearchCV(KNeighborsClassifier(), grid_params, verbose = 1, cv=10, n_jobs = -1)
+g_res = gs.fit(x_train, y_train)
+print("Optimized Best Score = ", g_res.best_score_)
+print("Optimized Best Parameters = ", g_res.best_params_)
+t_parameter=str(g_res.best_score_) + "," + str(g_res.best_params_)
+tuningParameter.write(str(t_parameter)+",")
+tuningParameter.write("------")
 
 
 
-    ########### Classification Report ########### 
-    # # print("Classification Report: ", classification_report(y_test, y_pred=prediction))
-    print("-------Time complexity--------")
-    # print("Hyper-perameter: ",(e_Parameter-s_Parameter))
-    print("Fit: ",(e_fit-e_Parameter))
-    print("predict: ",(p_fit-e_fit))
+#### Model training
+
+# Gausian Naive base instance
+e_Parameter=time.time()
+call_knn= KNeighborsClassifier(n_neighbors=g_res.best_params_['n_neighbors'],weights=g_res.best_params_['weights'], metric=g_res.best_params_['metric'],algorithm=g_res.best_params_['algorithm'])
+
+# fit the model
+model_knn= call_knn.fit(x_train,y_train)
+e_fit=time.time()
+# predict from the model
+prediction= model_knn.predict(x_test)
+p_fit=time.time()
+
+## Evaluating based on prediction & ytest
+# print("Prediction = ",prediction)
+# print("Y Test     = ",y_test)
+
+################################# Accuracy   ########################################
+accuracy= accuracy_score(y_test,prediction)
+print("Accuracy = ",accuracy)
+accuracyFile.write(str(accuracy)+",")
+
+# # ################################# 10 Fold Cross   ########################################
+cross_val=cross_val_score(model_knn, X, Y,cv=10)
+# print(cross_val)
+sum_cross_val= cross_val.sum()
+cv=sum_cross_val/10
+print("Cross Validation= ",cv)
+Cross_valFile_10_Fold.write(str(cv)+",")
+
+
+# ########################## Confussion Matrix ############################# 
+cm_result=confusion_matrix(y_test,prediction)
+
+print(cm_result)
+fig, ax = plot_confusion_matrix(conf_mat=cm_result,cmap=plt.cm.Greens,class_names=model_knn.classes_)
+# fig, ax = plot_confusion_matrix(conf_mat=cm_result,cmap=plt.cm.Greens)
+plt.xlabel('Predictions', fontsize=18)
+plt.ylabel('Actuals', fontsize=18)
+plt.title('Confusion Matrix', fontsize=18)
+# plt.savefig("cm.png")
+plt.show()
+
+
+# # ############ Presition, Recall, F1 ####################
+precision,recall,f1,support=precision_recall_fscore_support(y_test,prediction, average="weighted")
+print("Prec Recall F1 Supppor= ",precision_recall_fscore_support(y_test,prediction, average="weighted"))
+precisionFile.write(str(precision)+",")
+recallFile.write(str(recall)+",")
+f1File.write(str(f1)+",")
+
+
+
+########### Classification Report ########### 
+# # print("Classification Report: ", classification_report(y_test, y_pred=prediction))
+print("-------Time complexity--------")
+print("Hyper-perameter: ",(e_Parameter-s_Parameter))
+print("Fit: ",(e_fit-e_Parameter))
+print("predict: ",(p_fit-e_fit))

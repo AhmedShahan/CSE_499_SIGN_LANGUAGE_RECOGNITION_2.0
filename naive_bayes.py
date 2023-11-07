@@ -149,50 +149,6 @@ print("Testing Accuracy = ",accuracyOnTest)
 # plt.legend()
 # plt.show()
 
-
-########## LOSS #############
-import torch
-import torch.nn as nn
-import torch.optim as optim
-from sklearn.model_selection import train_test_split
-
-# Define your model
-# model = model_GaussianNB()
-
-# Split the data into training and testing sets
-x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2)
-
-# Define the loss function
-criterion = nn.CrossEntropyLoss()  # Replace with the appropriate loss function
-
-# Define the optimizer
-optimizer = optim.SGD(model_GaussianNB.parameters(), lr=0.1)  # Replace with the appropriate optimizer
-
-# Lists to store training and testing loss values
-train_loss = []
-test_loss = []
-
-# Training loop (for example, over epochs)
-num_epochs=100
-for epoch in range(num_epochs):
-    model_GaussianNB.train()  # Set the model in training mode
-    for inputs, labels in x_test:  # Iterate over batches of training data
-        optimizer.zero_grad()
-        outputs = model_GaussianNB(inputs)
-        loss = criterion(outputs, labels)
-        loss.backward()
-        optimizer.step()
-        train_loss.append(loss.item())
-    
-    model_GaussianNB.eval()  # Set the model in evaluation mode
-    with torch.no_grad():
-        for inputs, labels in x_test:  # Iterate over batches of testing data
-            outputs = model_GaussianNB(inputs)
-            loss = criterion(outputs, labels)
-            test_loss.append(loss.item())
-
-
-
 # # ################################# 10 Fold Cross   ########################################
 cross_val=cross_val_score(model_GaussianNB, X, Y,cv=10)
 # print(cross_val)
@@ -234,11 +190,14 @@ cv=sum_cross_val/10
 # recallFile.write(str(recall)+",")
 # f1File.write(str(f1)+",")
 
-
+# accuracyOnTrain= accuracy_score(y_train,predictionOnTrain)
+# accuracyOnTest= accuracy_score(y_test,predictionOnTest)
 
 ########### Classification Report ########### 
-# print("Classification Report: ", classification_report(y_test, y_pred=prediction))
-print("-------Time complexity--------")
-# print("Hyper-perameter: ",(e_Parameter-s_Parameter))
-print("Fit: ",(e_fit-e_Parameter))
-print("predict: ",(p_fit-e_fit))
+print("Classification Report: ", classification_report(y_train,predictionOnTrain))
+print("Classification Report: ", classification_report(y_test,predictionOnTest))
+
+# print("-------Time complexity--------")
+# # print("Hyper-perameter: ",(e_Parameter-s_Parameter))
+# print("Fit: ",(e_fit-e_Parameter))
+# print("predict: ",(p_fit-e_fit))

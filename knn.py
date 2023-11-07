@@ -7,6 +7,7 @@ from mlxtend.plotting import plot_confusion_matrix
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+import pickle
 import os 
 import time
 from sklearn.model_selection import GridSearchCV
@@ -86,6 +87,8 @@ call_knn= KNeighborsClassifier(n_neighbors=g_res.best_params_['n_neighbors'],wei
 
 # fit the model
 model_knn= call_knn.fit(x_train,y_train)
+
+'''
 e_fit=time.time()
 # predict from the model
 prediction= model_knn.predict(x_test)
@@ -96,9 +99,9 @@ p_fit=time.time()
 # print("Y Test     = ",y_test)
 
 ################################# Accuracy   ########################################
-accuracy= accuracy_score(y_test,prediction)
-print("Accuracy = ",accuracy)
-accuracyFile.write(str(accuracy)+",")
+# accuracy= accuracy_score(y_test,prediction)
+# print("Accuracy = ",accuracy)
+# accuracyFile.write(str(accuracy)+",")
 
 # # ################################# 10 Fold Cross   ########################################
 cross_val=cross_val_score(model_knn, X, Y,cv=10)
@@ -137,3 +140,14 @@ print("-------Time complexity--------")
 print("Hyper-perameter: ",(e_Parameter-s_Parameter))
 print("Fit: ",(e_fit-e_Parameter))
 print("predict: ",(p_fit-e_fit))
+'''
+
+
+
+## save model
+#=============== Save model #############
+
+# Pkl_Filename = "model/KNN_model_Bangla.pkl"  
+
+# with open(Pkl_Filename, 'wb') as file:  
+#     pickle.dump(model_knn, file)

@@ -6,11 +6,8 @@ import cv2
 from cvzone.PoseModule import PoseDetector
 
 cont=0
-
 cap = cv2.VideoCapture(0)
-
 file1 = file1 = open('/media/shahan/Projects/CSE499B/CSE_499_SIGN_LANGUAGE_RECOGNITION_2.0/temp.txt','a')
-
 detector = PoseDetector(staticMode=False,
                         modelComplexity=1,
                         smoothLandmarks=True,
@@ -34,9 +31,13 @@ while True:
         print("Original",lmList)
         dx, dy, dz = image_width, image_hight, 1
         translated_points = [[x * dx, y * dy, z * dz] for x, y, z in lmList]
+        # print("Normalized Form:",translated_points)
+        
+        onlyHandLandmarks= lmList[13:23]
 
-        print("Normalized Form:",translated_points)
-        landmarkList=[]
+        print("Only Hand 13-22",len(onlyHandLandmarks))
+
+
         if lmList==[]:
             print("null")
             # time.sleep(5)
